@@ -10,6 +10,8 @@ attrdict = "*"
 pydantic = "*"
 
 [dev-packages]
+twine = "*"
+loguru = "*"
 
 [requires]
 python_version = "3.8"
