@@ -1,6 +1,6 @@
 import asyncio
 from abc import ABC, abstractmethod
-from typing import Dict, Union
+from typing import Dict, Union, Type
 
 from attrdict import AttrDict
 from pydantic import BaseModel
@@ -11,22 +11,21 @@ class BaseAPICategoriesABC(ABC):
 
 
 class APICategoriesABC(ABC):
-    ...
-
-
-class PxollyAPIABC(ABC):
 
     @property
     @abstractmethod
     def api_instance(self) -> "PxollyAPIABC":
         ...
 
+
+class PxollyAPIABC(APICategoriesABC):
+
     @abstractmethod
     def make_request(
             self,
             method: str,
             data: Dict = None,
-            dataclass: Union[dict, AttrDict, BaseModel] = AttrDict
+            dataclass: Union[Type[dict], Type[AttrDict], Type[BaseModel]] = AttrDict
     ) -> dict:
         ...
 
@@ -35,7 +34,7 @@ class PxollyAPIABC(ABC):
             self,
             method: str,
             data: Dict = None,
-            dataclass: Union[dict, AttrDict, BaseModel] = AttrDict
+            dataclass: Union[Type[dict], Type[AttrDict], Type[BaseModel]] = AttrDict
     ) -> dict:
         ...
 

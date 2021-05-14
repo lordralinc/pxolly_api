@@ -9,7 +9,7 @@ pip install -U pxolly
 ```
 или
 ```shell
-pip install -U https://github.com/lordralinc/pxolly/archive/master.zip
+pip install -U https://github.com/lordralinc/pxolly_api/archive/master.zip
 ```
 ## Получение токена
 N/A
@@ -19,6 +19,7 @@ N/A
 from pxolly import PxollyAPI
 
 api = PxollyAPI("access_token")
+api.acc.get_info()
 api.make_request("method", {"foo": "bar"})
 await api.make_request_async("method", {"foo": "bar"})
 ```

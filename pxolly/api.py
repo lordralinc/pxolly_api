@@ -8,6 +8,7 @@ from pydantic import BaseModel, ValidationError
 
 from pxolly import const
 from pxolly.abc import PxollyAPIABC
+from pxolly.categories import APICategories
 from pxolly.exceptions import PxollyAPIException
 
 try:
@@ -20,8 +21,11 @@ except ImportError:
 T = TypeVar('T', dict, AttrDict, BaseModel)
 
 
-class PxollyAPI(PxollyAPIABC):
+class PxollyAPI(PxollyAPIABC, APICategories):
     URL = "https://api.pxolly.ru/method/{method}"
+    HEADERS = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
 
     def __init__(
             self,
@@ -53,7 +57,7 @@ class PxollyAPI(PxollyAPIABC):
 
     def make_request(self, method: str, data=None, dataclass: Type[T] = AttrDict) -> T:
         request_url, request_data, is_raw = self.get_prepared_data(method, data)
-        response = requests.post(request_url, data=data, timeout=self.timeout)
+        response = requests.post(request_url, data=request_data, timeout=self.timeout, headers=self.HEADERS)
         response.raise_for_status()
         response_json = response.json()
         return self.validate_response(response_json, dataclass, is_raw)
@@ -61,7 +65,7 @@ class PxollyAPI(PxollyAPIABC):
     async def make_request_async(self, method: str, data=None, dataclass: Type[T] = AttrDict) -> T:
         request_url, request_data, is_raw = self.get_prepared_data(method, data)
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout)) as session:
-            async with session.post(request_url, data=data) as response:
+            async with session.post(request_url, data=request_data) as response:
                 response.raise_for_status()
                 response_json = await response.json()
         return self.validate_response(response_json, dataclass, is_raw)
