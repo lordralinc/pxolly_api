@@ -4,6 +4,7 @@ from typing import Optional
 from pxolly.abc import APICategoriesABC
 
 from .acc import AccAPICategory
+from .callback import CallbackAPICategory
 
 
 class APICategories(APICategoriesABC, ABC):
@@ -11,6 +12,10 @@ class APICategories(APICategoriesABC, ABC):
     @property
     def acc(self):
         return AccAPICategory(self.api_instance)
+
+    @property
+    def callback(self):
+        return CallbackAPICategory(self.api_instance)
 
     def execute(
             self,
